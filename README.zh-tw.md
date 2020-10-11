@@ -1,16 +1,16 @@
-*Read this in other languages: [English](README.md), [中文](README.zh-tw.md).*
+*其他語言版本: [English](README.md), [中文](README.zh-tw.md).*
 
 # SecuritySharedPreferences
-A small SharedPreferences wrapper and cryptographic android library power by Kotlin.
+小型的Android kotlin SharedPreferences封裝加密函式庫。
 
-⚡ Kotlin powered.
+⚡ Kotlin.
 
-🚀 Easy to use.
+🚀 簡易使用。
 
-🔒 Protect data (Android KeyStore + AES GCM / + RSA ECB).
+🔒 保護資料 (Android KeyStore + AES GCM / + RSA ECB).
 
-## Supported Android Versions
-- Android 4.4 Lollipop(API level 19) or higher.
+## 支援Android版本
+- Android 4.4 Lollipop(API level 19)或更高。
 
 ## Gradle
 ```
@@ -29,26 +29,26 @@ dependencies {
 }
 ```
 
-## Usage
+## 使用
 ```
-// Use default SecuritySharedPreferences
+// 使用默認的SecuritySharedPreferences
 class DefaultPreferences(context: Context) : SecuritySharedPreferences(context) {
-    // Add your stored parameter...
+    // 添加存儲的參數...
     var email by PreferencesData<String>("EMAIL", "")
 }
 
-// Customize your SecuritySharedPreferences
+// 自定義SecuritySharedPreferences
 class CustomPreferences(context: Context) :
     SecuritySharedPreferences(context, "Custom", "${context.packageName}.custom") {
-    // Add your stored parameter...
+    // 添加存儲的參數...
 }
 ```
 
 ```
-// init SecuritySharedPreferences instance
+// 初始化SecuritySharedPreferences實體
 val preferencesManager = DefaultPreferences(this)
-// get value from SecuritySharedPreferences
+// 從SecuritySharedPreferences讀取數值
 val email = preferencesManager.email
-// save value into SecuritySharedPreferences
+// 儲存數值到SecuritySharedPreferences
 preferencesManager.email = "ABC@gmail.com"
 ```
