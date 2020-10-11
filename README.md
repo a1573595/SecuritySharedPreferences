@@ -30,25 +30,29 @@ dependencies {
 ```
 
 ## Usage
+Define your SecuritySharedPreferences and add the parameters to be stored.
 ```
-// Use default SecuritySharedPreferences
 class DefaultPreferences(context: Context) : SecuritySharedPreferences(context) {
-    // Add your stored parameter...
+    // Add your stored parameter in here.
     var email by PreferencesData<String>("EMAIL", "")
 }
+```
 
-// Customize your SecuritySharedPreferences
+Or you can customize the KeyStore alias, SharedPreferences name and mode.
+```
 class CustomPreferences(context: Context) :
     SecuritySharedPreferences(context, "Custom", "${context.packageName}.custom") {
     // Add your stored parameter...
 }
 ```
 
+Initialization SecuritySharedPreferences instance, easy to get and set stored value.
 ```
-// init SecuritySharedPreferences instance
 val preferencesManager = DefaultPreferences(this)
+
 // get value from SecuritySharedPreferences
 val email = preferencesManager.email
+
 // save value into SecuritySharedPreferences
 preferencesManager.email = "ABC@gmail.com"
 ```

@@ -4,8 +4,8 @@ import android.content.Context
 import com.a1573595.securitysharedpreferences.SecuritySharedPreferences
 
 /**
- * You can use the default SecuritySharedPreferences constructor or
- * customize the value of KeyStore alias, SharedPreferences name and mode.
+ * Define your SecuritySharedPreferences and add the parameters to be stored.
+ * Or you can customize the KeyStore alias, SharedPreferences name and mode.
  *
  * Customize the stored parameter name, type, and default value like
  * var value by PreferencesData<T>("KEY", DEFAULT_VALUE)
