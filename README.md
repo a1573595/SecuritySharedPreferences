@@ -9,6 +9,22 @@ A small SharedPreferences wrapper and cryptographic android library power by Kot
 
 🔒 Protect data (Android KeyStore + AES GCM / + RSA ECB).
 
+## Difference
+Difference between the android SharedPreference and SecuritySharedPreferences library.
+```
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name="EMAIL">ABC@gmail.com</string>
+</map>
+```
+
+```
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name="72d90af393d610727bdf1fa58d1010c116f263ae7ce096eeb7eb36c2ae646791">7sfn2pm7ueQ7AU5UrT4f8gYJryGsT16ZT/sHhkI=&#10;    </string>
+</map>
+```
+
 ## Supported Android Versions
 - Android 4.4 Lollipop(API level 19) or higher.
 
@@ -56,3 +72,6 @@ val email = preferencesManager.email
 // save value into SecuritySharedPreferences
 preferencesManager.email = "ABC@gmail.com"
 ```
+
+## Reference
+[AndroidKeyStore](https://github.com/joetsaitw/AndroidKeyStore)
