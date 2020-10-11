@@ -13,7 +13,7 @@ A small SharedPreferences wrapper and cryptographic android library power by Kot
 - Android 4.4 Lollipop(API level 19) or higher.
 
 ## Gradle
-```
+```groovy
 allprojects {
     repositories {
     ...
@@ -23,7 +23,7 @@ allprojects {
 }
 ```
 
-```
+```groovy
 dependencies {
     implementation 'com.github.a1573595:SecuritySharedPreferences:1.0.0'
 }
@@ -31,7 +31,7 @@ dependencies {
 
 ## Usage
 Define your SecuritySharedPreferences and add the parameters to be stored.
-```
+```kotlin
 class DefaultPreferences(context: Context) : SecuritySharedPreferences(context) {
     // Add your stored parameter in here.
     var email by PreferencesData<String>("EMAIL", "")
@@ -39,7 +39,7 @@ class DefaultPreferences(context: Context) : SecuritySharedPreferences(context) 
 ```
 
 Or you can customize the KeyStore alias, SharedPreferences name and mode.
-```
+```kotlin
 class CustomPreferences(context: Context) :
     SecuritySharedPreferences(context, "Custom", "${context.packageName}.custom") {
     // Add your stored parameter...
@@ -47,7 +47,7 @@ class CustomPreferences(context: Context) :
 ```
 
 Initialization SecuritySharedPreferences instance, easy to get and set stored value.
-```
+```kotlin
 val preferencesManager = DefaultPreferences(this)
 
 // get value from SecuritySharedPreferences

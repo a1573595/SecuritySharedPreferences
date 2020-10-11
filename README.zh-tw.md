@@ -13,7 +13,7 @@
 - Android 4.4 Lollipop(API level 19)或更高。
 
 ## Gradle
-```
+```groovy
 allprojects {
     repositories {
     ...
@@ -23,7 +23,7 @@ allprojects {
 }
 ```
 
-```
+```groovy
 dependencies {
     implementation 'com.github.a1573595:SecuritySharedPreferences:1.0.0'
 }
@@ -31,7 +31,7 @@ dependencies {
 
 ## 用法
 定義你的SecuritySharedPreferences並添加要存儲的參數。
-```
+```kotlin
 class DefaultPreferences(context: Context) : SecuritySharedPreferences(context) {
     // 在此處添加您存儲的參數。
     var email by PreferencesData<String>("EMAIL", "")
@@ -39,7 +39,7 @@ class DefaultPreferences(context: Context) : SecuritySharedPreferences(context) 
 ```
 
 或者你可以自定義KeyStore別名、SharedPreferences名稱和模式。
-```
+```kotlin
 class CustomPreferences(context: Context) :
     SecuritySharedPreferences(context, "Custom", "${context.packageName}.custom") {
     // 在此處添加您存儲的參數。
@@ -48,7 +48,7 @@ class CustomPreferences(context: Context) :
 
 初始化SecuritySharedPreferences實體，簡單的取得與儲存數值。
 
-```
+```kotlin
 val preferencesManager = DefaultPreferences(this)
 
 // 從SecuritySharedPreferences讀取數值
