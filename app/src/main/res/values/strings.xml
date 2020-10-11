@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SecuritySharedPreferences</string>
+
+    <string name="please_enter_email">Please enter email</string>
+    <string name="please_enter_password">Please enter password</string>
+    <string name="hi_name">Hi\t\t%s</string>
+</resources>
