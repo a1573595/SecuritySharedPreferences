@@ -206,9 +206,9 @@ abstract class SecuritySharedPreferences(
         ReadWriteProperty<Any?, T> {
         init {
             when (defaultValue) {
-                is Number, is String -> {
+                is Boolean, is Number, is String -> {
                 }
-                else -> throw(DataFormatException("Unsupported data type, only support Number and String"))
+                else -> throw(DataFormatException("Unsupported data type, only support Number and String."))
             }
         }
 
@@ -223,7 +223,12 @@ abstract class SecuritySharedPreferences(
                 defaultValue
             } else {
                 val value = decryptAES(encryptStr)
-                value as T
+
+                if (defaultValue is Boolean) {
+                    value.toBoolean() as T
+                } else {
+                    value as T
+                }
             }
         }
     }
