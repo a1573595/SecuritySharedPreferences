@@ -41,24 +41,33 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.github.a1573595:SecuritySharedPreferences:1.0.0'
+    implementation 'com.github.a1573595:SecuritySharedPreferences:1.1.0'
 }
 ```
 
 ## 用法
 定義你的SecuritySharedPreferences並添加要存儲的參數。
 ```kotlin
-class DefaultPreferences(context: Context) : SecuritySharedPreferences(context) {
-    // 在此處添加您存儲的參數。
-    var email by PreferencesData<String>("EMAIL", "")
+class DefaultPreferences(context: Context) :
+    SecuritySharedPreferences(context, context.packageName) {
+    // 在此處添加您存儲的參數...
+    var userName by PreferencesData<String>("Name", "")
+
+    var email by PreferencesData<String>("Email", "")
+
+    var address by PreferencesData<String>("Address", "")
+
+    var age by PreferencesData<Int>("Age", 25)
+
+    var height by PreferencesData<Float>("Age", 1.75f)
 }
 ```
 
 或者你可以自定義KeyStore別名、SharedPreferences名稱和模式。
 ```kotlin
 class CustomPreferences(context: Context) :
-    SecuritySharedPreferences(context, "Custom", "${context.packageName}.custom") {
-    // 在此處添加您存儲的參數。
+    SecuritySharedPreferences(context, "${context.packageName}.custom") {
+    // 在此處添加您存儲的參數...
 }
 ```
 

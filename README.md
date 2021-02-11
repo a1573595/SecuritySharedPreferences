@@ -41,23 +41,32 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.github.a1573595:SecuritySharedPreferences:1.0.0'
+    implementation 'com.github.a1573595:SecuritySharedPreferences:1.1.0'
 }
 ```
 
 ## Usage
 Define your SecuritySharedPreferences and add the parameters to be stored.
 ```kotlin
-class DefaultPreferences(context: Context) : SecuritySharedPreferences(context) {
-    // Add your stored parameter in here.
-    var email by PreferencesData<String>("EMAIL", "")
+class DefaultPreferences(context: Context) :
+    SecuritySharedPreferences(context, context.packageName) {
+    // Add your stored parameter...
+    var userName by PreferencesData<String>("Name", "")
+
+    var email by PreferencesData<String>("Email", "")
+
+    var address by PreferencesData<String>("Address", "")
+
+    var age by PreferencesData<Int>("Age", 25)
+
+    var height by PreferencesData<Float>("Age", 1.75f)
 }
 ```
 
 Or you can customize the KeyStore alias, SharedPreferences name and mode.
 ```kotlin
 class CustomPreferences(context: Context) :
-    SecuritySharedPreferences(context, "Custom", "${context.packageName}.custom") {
+    SecuritySharedPreferences(context, "${context.packageName}.custom") {
     // Add your stored parameter...
 }
 ```
