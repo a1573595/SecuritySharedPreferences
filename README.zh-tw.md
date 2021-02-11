@@ -51,7 +51,7 @@ dependencies {
 class DefaultPreferences(context: Context) :
     SecuritySharedPreferences(context, context.packageName) {
     // 在此處添加您存儲的參數...
-    var userName by PreferencesData<String>("Name", "")
+    var userName by PreferencesData<String>("Name", "Chien")
 
     var email by PreferencesData<String>("Email", "")
 
@@ -59,7 +59,7 @@ class DefaultPreferences(context: Context) :
 
     var age by PreferencesData<Int>("Age", 25)
 
-    var height by PreferencesData<Float>("Age", 1.75f)
+    var height by PreferencesData<Float>("Height", 1.75f)
 }
 ```
 

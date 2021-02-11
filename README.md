@@ -51,7 +51,7 @@ Define your SecuritySharedPreferences and add the parameters to be stored.
 class DefaultPreferences(context: Context) :
     SecuritySharedPreferences(context, context.packageName) {
     // Add your stored parameter...
-    var userName by PreferencesData<String>("Name", "")
+    var userName by PreferencesData<String>("Name", "Chien")
 
     var email by PreferencesData<String>("Email", "")
 
@@ -59,7 +59,7 @@ class DefaultPreferences(context: Context) :
 
     var age by PreferencesData<Int>("Age", 25)
 
-    var height by PreferencesData<Float>("Age", 1.75f)
+    var height by PreferencesData<Float>("Height", 1.75f)
 }
 ```
 
