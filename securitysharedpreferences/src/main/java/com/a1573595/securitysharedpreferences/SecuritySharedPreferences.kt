@@ -22,38 +22,45 @@ import kotlin.reflect.KProperty
 
 abstract class SecuritySharedPreferences(
     context: Context,
-    keyAlias: String = "Alias",
-    name: String = context.packageName,
+    name: String,
     mode: Int = Context.MODE_PRIVATE
 ) {
     private val KEYSTORE_PROVIDER = "AndroidKeyStore"
-    private val KEYSTORE_ALIAS = keyAlias
+    private val KEYSTORE_ALIAS = name
     private val RSA_MODE = "RSA/ECB/PKCS1Padding"
     private val AES_MODE = "AES/GCM/NoPadding"
 
     private val PREF_KEY_AES = "PREF_KEY_AES"
     private val PREF_KEY_IV = "PREF_KEY_IV"
 
-    private val sp: SharedPreferences = context.getSharedPreferences(name, mode)
+    private val sp: SharedPreferences =
+        context.getSharedPreferences(name, mode)
 
     private val keyStore: KeyStore = KeyStore.getInstance(KEYSTORE_PROVIDER)
 
+    private val aesKey: SecretKeySpec
+    private val ivParameterSpec: IvParameterSpec
+
     init {
         keyStore.load(null)
+
         if (!keyStore.containsAlias(KEYSTORE_ALIAS)) {
-            clear()
+            sp.edit().clear().commit()
 
             genKeyStoreKey(context)
             genAESKey()
         }
+
+        aesKey = getAESKey()
+        ivParameterSpec = IvParameterSpec(getIV())
     }
 
     // Clear data except AES keys
-    fun clear() {
+    fun clear(): Boolean {
         val editor = sp.edit()
 
-        val strAES = PREF_KEY_AES.toSHA256()
-        val strIV = PREF_KEY_IV.toSHA256()
+        val strAES = PREF_KEY_AES.toSHA1()
+        val strIV = PREF_KEY_IV.toSHA1()
 
         for (key in sp.all.keys) {
             if (key == strAES || key == strIV) {
@@ -63,23 +70,7 @@ abstract class SecuritySharedPreferences(
             editor.remove(key)
         }
 
-        editor.apply()
-    }
-
-    fun String.toSHA256(): String {
-        return try {
-            val digest = MessageDigest.getInstance("SHA-256")
-            val hash = digest.digest(this.toByteArray(charset("UTF-8")))
-            val hexString = StringBuffer()
-            for (i in hash.indices) {
-                val hex = Integer.toHexString(0xff and hash[i].toInt())
-                if (hex.length == 1) hexString.append('0')
-                hexString.append(hex)
-            }
-            hexString.toString()
-        } catch (ex: Exception) {
-            throw RuntimeException(ex)
-        }
+        return editor.commit()
     }
 
     private fun genKeyStoreKey(context: Context) {
@@ -160,8 +151,8 @@ abstract class SecuritySharedPreferences(
         val cipher = Cipher.getInstance(AES_MODE)
         cipher.init(
             Cipher.ENCRYPT_MODE,
-            getAESKey(),
-            IvParameterSpec(getIV())
+            aesKey,
+            ivParameterSpec
         )
 
         val encryptedBytes = cipher.doFinal(plainText.toByteArray())
@@ -169,67 +160,73 @@ abstract class SecuritySharedPreferences(
     }
 
     private fun decryptAES(encryptedText: String): String {
-        val decodedBytes =
-            Base64.decode(encryptedText.toByteArray(), Base64.DEFAULT)
-
         val cipher = Cipher.getInstance(AES_MODE)
         cipher.init(
             Cipher.DECRYPT_MODE,
-            getAESKey(),
-            IvParameterSpec(getIV())
+            aesKey,
+            ivParameterSpec
         )
 
+        val decodedBytes = Base64.decode(encryptedText.toByteArray(), Base64.DEFAULT)
         return String(cipher.doFinal(decodedBytes))
     }
 
     private fun setAESKey(aesKey: ByteArray) {
-        sp.edit(true) { putString(PREF_KEY_AES.toSHA256(), encryptRSA(aesKey)) }
+        sp.edit(true) { putString(PREF_KEY_AES.toSHA1(), encryptRSA(aesKey)) }
     }
 
     private fun getAESKey(): SecretKeySpec {
-        val encryptedKey: String = sp.getString(PREF_KEY_AES.toSHA256(), "") as String
+        val encryptedKey: String = sp.getString(PREF_KEY_AES.toSHA1(), "") as String
         val aesKey = decryptRSA(encryptedKey)
 
         return SecretKeySpec(aesKey, AES_MODE)
     }
 
     private fun setIV(iv: ByteArray) {
-        sp.edit(true) { putString(PREF_KEY_IV.toSHA256(), encryptRSA(iv)) }
+        sp.edit(true) { putString(PREF_KEY_IV.toSHA1(), encryptRSA(iv)) }
     }
 
     private fun getIV(): ByteArray {
-        val encryptedIV: String = sp.getString(PREF_KEY_AES.toSHA256(), "") as String
+        val encryptedIV: String = sp.getString(PREF_KEY_AES.toSHA1(), "") as String
         return decryptRSA(encryptedIV)
     }
 
     protected inner class PreferencesData<T>(private val key: String, private val defaultValue: T) :
         ReadWriteProperty<Any?, T> {
         init {
-            when (defaultValue) {
-                is Boolean, is Number, is String -> {
-                }
-                else -> throw(DataFormatException("Unsupported data type, only support Number and String."))
+            if (defaultValue !is Boolean && defaultValue !is Number && defaultValue !is String) {
+                throw(DataFormatException("Unsupported data type, only support Number and String."))
             }
         }
 
         override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-            sp.edit { putString(key.toSHA256(), encryptAES(value.toString())) }
+            sp.edit(true) { putString(key.toSHA1(), encryptAES(value.toString())) }
         }
 
         override fun getValue(thisRef: Any?, property: KProperty<*>): T {
-            val encryptStr = sp.getString(key.toSHA256(), null)
+            val encryptStr = sp.getString(key.toSHA1(), null)
 
             return if (encryptStr == null) {
                 defaultValue
             } else {
                 val value = decryptAES(encryptStr)
 
-                if (defaultValue is Boolean) {
-                    value.toBoolean() as T
-                } else {
-                    value as T
+                when (defaultValue) {
+                    is Double -> value.toDouble() as T
+                    is Float -> value.toFloat() as T
+                    is Long -> value.toLong() as T
+                    is Int -> value.toInt() as T
+                    is Char -> value.single() as T
+                    is Short -> value.toShort() as T
+                    is Byte -> value.toByte() as T
+                    is Boolean -> value.toBoolean() as T
+                    else -> value as T
                 }
             }
         }
     }
 }
+
+fun String.toSHA1(): String = MessageDigest.getInstance("SHA-1")
+    .digest(toByteArray())
+    .fold("", { str, it -> str + "%02x".format(it) })

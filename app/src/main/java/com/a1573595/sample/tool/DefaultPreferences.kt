@@ -15,13 +15,13 @@ import com.a1573595.securitysharedpreferences.SecuritySharedPreferences
  */
 
 // Use default SecuritySharedPreferences
-class DefaultPreferences(context: Context) : SecuritySharedPreferences(context) {
+class DefaultPreferences(context: Context) : SecuritySharedPreferences(context, context.packageName) {
     // Add your stored parameter...
     var email by PreferencesData<String>("EMAIL", "")
 }
 
 // Customize your SecuritySharedPreferences
 class CustomPreferences(context: Context) :
-    SecuritySharedPreferences(context, "Custom", "${context.packageName}.custom") {
+    SecuritySharedPreferences(context, "${context.packageName}.custom") {
     // Add your stored parameter...
 }
