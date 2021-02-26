@@ -124,51 +124,55 @@ abstract class SecuritySharedPreferences(
     }
 
     private fun encryptRSA(plainText: ByteArray): String {
-        val publicKey =
-            keyStore.getCertificate(KEYSTORE_ALIAS)
-                .publicKey
-        val cipher = Cipher.getInstance(RSA_MODE)
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey)
+        val publicKey = keyStore.getCertificate(KEYSTORE_ALIAS).publicKey
 
-        val encryptedByte = cipher.doFinal(plainText)
-        return Base64.encodeToString(encryptedByte, Base64.DEFAULT)
+        synchronized(this) {
+            val cipher = Cipher.getInstance(RSA_MODE)
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey)
+
+            val encryptedByte = cipher.doFinal(plainText)
+            return Base64.encodeToString(encryptedByte, Base64.DEFAULT)
+        }
     }
 
     private fun decryptRSA(encryptedText: String): ByteArray {
-        val privateKey = keyStore.getKey(
-            KEYSTORE_ALIAS,
-            null
-        ) as PrivateKey
-        val cipher = Cipher.getInstance(RSA_MODE)
-        cipher.init(Cipher.DECRYPT_MODE, privateKey)
+        val privateKey = keyStore.getKey(KEYSTORE_ALIAS, null) as PrivateKey
 
-        val encryptedBytes =
-            Base64.decode(encryptedText, Base64.DEFAULT)
-        return cipher.doFinal(encryptedBytes)
+        synchronized(this) {
+            val cipher = Cipher.getInstance(RSA_MODE)
+            cipher.init(Cipher.DECRYPT_MODE, privateKey)
+
+            val encryptedBytes = Base64.decode(encryptedText, Base64.DEFAULT)
+            return cipher.doFinal(encryptedBytes)
+        }
     }
 
     private fun encryptAES(plainText: String): String {
-        val cipher = Cipher.getInstance(AES_MODE)
-        cipher.init(
-            Cipher.ENCRYPT_MODE,
-            aesKey,
-            ivParameterSpec
-        )
+        synchronized(this) {
+            val cipher = Cipher.getInstance(AES_MODE)
+            cipher.init(
+                Cipher.ENCRYPT_MODE,
+                aesKey,
+                ivParameterSpec
+            )
 
-        val encryptedBytes = cipher.doFinal(plainText.toByteArray())
-        return Base64.encodeToString(encryptedBytes, Base64.DEFAULT)
+            val encryptedBytes = cipher.doFinal(plainText.toByteArray())
+            return Base64.encodeToString(encryptedBytes, Base64.DEFAULT)
+        }
     }
 
     private fun decryptAES(encryptedText: String): String {
-        val cipher = Cipher.getInstance(AES_MODE)
-        cipher.init(
-            Cipher.DECRYPT_MODE,
-            aesKey,
-            ivParameterSpec
-        )
+        synchronized(this) {
+            val cipher = Cipher.getInstance(AES_MODE)
+            cipher.init(
+                Cipher.DECRYPT_MODE,
+                aesKey,
+                ivParameterSpec
+            )
 
-        val decodedBytes = Base64.decode(encryptedText.toByteArray(), Base64.DEFAULT)
-        return String(cipher.doFinal(decodedBytes))
+            val decodedBytes = Base64.decode(encryptedText, Base64.DEFAULT)
+            return String(cipher.doFinal(decodedBytes))
+        }
     }
 
     private fun setAESKey(aesKey: ByteArray) {
