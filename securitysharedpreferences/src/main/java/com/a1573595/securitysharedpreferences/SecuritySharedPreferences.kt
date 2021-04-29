@@ -208,24 +208,24 @@ abstract class SecuritySharedPreferences(
         }
 
         override fun getValue(thisRef: Any?, property: KProperty<*>): T {
-            val encryptStr = sp.getString(key.toSHA1(), null)
+            val encryptStr: String? = sp.getString(key.toSHA1(), null)
 
-            return if (encryptStr == null) {
+            return if (encryptStr.isNullOrEmpty()) {
                 defaultValue
             } else {
                 val value = decryptAES(encryptStr)
 
                 when (defaultValue) {
-                    is Double -> value.toDouble() as T
-                    is Float -> value.toFloat() as T
-                    is Long -> value.toLong() as T
-                    is Int -> value.toInt() as T
-                    is Char -> value.single() as T
-                    is Short -> value.toShort() as T
-                    is Byte -> value.toByte() as T
-                    is Boolean -> value.toBoolean() as T
-                    else -> value as T
-                }
+                    is Double -> value.toDouble()
+                    is Float -> value.toFloat()
+                    is Long -> value.toLong()
+                    is Int -> value.toInt()
+                    is Char -> value.single()
+                    is Short -> value.toShort()
+                    is Byte -> value.toByte()
+                    is Boolean -> value.toBoolean()
+                    else -> value
+                } as T
             }
         }
     }
