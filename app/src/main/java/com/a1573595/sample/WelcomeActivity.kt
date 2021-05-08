@@ -9,20 +9,23 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
 import androidx.annotation.RequiresApi
+import com.a1573595.sample.databinding.ActivityWelcomeBinding
 import com.a1573595.sample.tool.DefaultPreferences
-import kotlinx.android.synthetic.main.activity_welcome.*
 
 class WelcomeActivity : AppCompatActivity() {
+    private lateinit var viewBinding: ActivityWelcomeBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_welcome)
+        viewBinding = ActivityWelcomeBinding.inflate(layoutInflater)
+        setContentView(viewBinding.root)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setupWindowAnimations()
         }
 
         val preferencesManager = DefaultPreferences(this)
-        tvEmail.text = getString(R.string.hi_name, preferencesManager.email)
+        viewBinding.tvEmail.text = getString(R.string.hi_name, preferencesManager.email)
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -49,7 +52,7 @@ class WelcomeActivity : AppCompatActivity() {
                 animation.duration = 500
                 animation.fillAfter = false
                 animation.startOffset = 250
-                imgDuck?.startAnimation(animation)
+                viewBinding.imgDuck.startAnimation(animation)
             }
 
             override fun onTransitionCancel(transition: Transition) {}
