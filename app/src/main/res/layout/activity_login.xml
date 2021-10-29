@@ -21,7 +21,8 @@
             android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^*?"
             android:hint="@string/account"
             android:inputType="text"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:transitionName="account" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout

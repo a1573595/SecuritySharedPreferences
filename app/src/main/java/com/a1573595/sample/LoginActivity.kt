@@ -3,40 +3,68 @@ package com.a1573595.sample
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import com.a1573595.sample.databinding.ActivityLoginBinding
-import com.a1573595.sample.tool.DefaultPreferences
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var viewBinding: ActivityLoginBinding
+    private lateinit var binding: ActivityLoginBinding
+
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewBinding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(viewBinding.root)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val preferencesManager = DefaultPreferences(this)
-        // reset value
-//        preferencesManager.clear()
+        initView()
+        subscriptViewModel()
+    }
 
-        viewBinding.tfAccount.setText(preferencesManager.email)
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_clear, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
 
-        viewBinding.btnLogin.setOnClickListener {
-            // save value to sharedPreference
-            if (viewBinding.tfAccount.length() > 0) {
-                preferencesManager.email = viewBinding.tfAccount.text.toString()
-            }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.item_clear) {
+            viewModel.clear()
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
+    private fun initView() {
+        binding.btnLogin.setOnClickListener {
+            viewModel.login("${binding.tfAccount.text}", "${binding.tfPassword.text}")
+        }
+    }
+
+    private fun subscriptViewModel() {
+        viewModel.account.observe(this, EventObserver {
+            binding.tfAccount.setText(it)
+        })
+
+        viewModel.accountError.observe(this, EventObserver {
+            binding.accountLayout.error = it
+        })
+
+        viewModel.passwordError.observe(this, EventObserver {
+            binding.passwordLayout.error = it
+        })
+
+        viewModel.loginSuccess.observe(this, EventObserver {
             val p1: Pair<View, String> =
-                Pair.create(viewBinding.tfAccount, viewBinding.tfAccount.transitionName)
+                Pair.create(binding.tfAccount, binding.tfAccount.transitionName)
 
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, p1)
 
             val intent = Intent(this, WelcomeActivity::class.java)
             startActivity(intent, options.toBundle())
-        }
+        })
     }
 }

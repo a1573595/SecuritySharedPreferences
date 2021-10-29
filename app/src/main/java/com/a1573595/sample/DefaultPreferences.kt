@@ -1,4 +1,4 @@
-package com.a1573595.sample.tool
+package com.a1573595.sample
 
 import android.content.Context
 import com.a1573595.securitysharedpreferences.SecuritySharedPreferences
@@ -20,7 +20,7 @@ class DefaultPreferences(context: Context) :
     // Add your stored parameter...
     var userName by PreferencesData<String>("Name", "Chien")
 
-    var email by PreferencesData<String>("Email", "")
+    var account by PreferencesData<String>("Account", "")
 
     var address by PreferencesData<String>("Address", "")
 

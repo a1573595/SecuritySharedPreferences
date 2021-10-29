@@ -15,5 +15,5 @@
         android:gravity="center"
         android:text="@string/hi_name"
         android:textSize="24dp"
-        android:transitionName="tvEmail" />
+        android:transitionName="account" />
 </LinearLayout>
