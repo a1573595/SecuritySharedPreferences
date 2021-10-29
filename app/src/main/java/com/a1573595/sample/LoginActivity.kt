@@ -14,6 +14,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         viewBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
@@ -21,19 +22,18 @@ class LoginActivity : AppCompatActivity() {
         // reset value
 //        preferencesManager.clear()
 
-        viewBinding.edEmail.setText(preferencesManager.email)
+        viewBinding.tfAccount.setText(preferencesManager.email)
 
         viewBinding.btnLogin.setOnClickListener {
             // save value to sharedPreference
-            if (viewBinding.edEmail.length() > 0) {
-                preferencesManager.email = viewBinding.edEmail.text.toString()
+            if (viewBinding.tfAccount.length() > 0) {
+                preferencesManager.email = viewBinding.tfAccount.text.toString()
             }
 
-            val p1: Pair<View, String> = Pair.create(viewBinding.edEmail, "tvEmail")
-            val p2: Pair<View, String> = Pair.create(viewBinding.imgDuck, "imgDuck")
+            val p1: Pair<View, String> =
+                Pair.create(viewBinding.tfAccount, viewBinding.tfAccount.transitionName)
 
-            val options =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(this, p1, p2)
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, p1)
 
             val intent = Intent(this, WelcomeActivity::class.java)
             startActivity(intent, options.toBundle())
