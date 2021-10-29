@@ -3,30 +3,32 @@
 # SecuritySharedPreferences
 小型的Android kotlin SharedPreferences封裝加密函式庫。
 
-⚡ Kotlin.
+⚡ Kotlin。
 
 🚀 簡易使用。
 
-🔒 保護資料 (Android KeyStore + AES GCM / + RSA ECB).
+🔒 保護資料 (Android KeyStore + AES256 SIV / + AES256 GCM)。
+
+🧪 支援Unit test。
 
 ## 差異
 Android SharedPreference與SecuritySharedPreferences函式庫差異。
 ```
 <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
 <map>
-    <string name="EMAIL">ABC@gmail.com</string>
+    <string name="Account">ABC@gmail.com</string>
 </map>
 ```
 
 ```
 <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
 <map>
-    <string name="72d90af393d610727bdf1fa58d1010c116f263ae7ce096eeb7eb36c2ae646791">7sfn2pm7ueQ7AU5UrT4f8gYJryGsT16ZT/sHhkI=&#10;    </string>
+    <string name="AWT/LySwiIhTyjEtGKZ9kQ0t6n30XnNbLft3/g==">AVQneV9aILgdLAT+OYJowJYWzeRktEj7gsttnTN4bLXMa690QKYnBWq1MuwnFpYAhjV/Gna2axuvqw==</string>
 </map>
 ```
 
 ## 支援Android版本
-- Android 4.4 Lollipop(API level 19)或更高。
+- Android 5.1 Lollipop(API level 21)或更高。
 
 ## Gradle
 ```groovy
@@ -41,7 +43,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.github.a1573595:SecuritySharedPreferences:1.1.0'
+    implementation 'com.github.a1573595:SecuritySharedPreferences:2.0.0'
 }
 ```
 

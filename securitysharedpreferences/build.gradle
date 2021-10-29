@@ -46,7 +46,7 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
                 groupId = 'com.github.a1573595'
-                artifactId = 'SecuritySharedPreferences\n'
+                artifactId = 'SecuritySharedPreferences'
                 version = '1.0.0'
             }
         }
