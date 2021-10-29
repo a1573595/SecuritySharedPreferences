@@ -43,7 +43,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.github.a1573595:SecuritySharedPreferences:2.0.0'
+    implementation 'com.github.a1573595:SecuritySharedPreferences:2.0.3'
 }
 ```
 
