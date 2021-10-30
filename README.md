@@ -13,6 +13,7 @@ A small SharedPreferences wrapper and cryptographic android library power by Kot
 
 ## Difference
 Difference between the android SharedPreference and SecuritySharedPreferences library.
+* SharedPreference
 ```
 <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
 <map>
@@ -20,6 +21,7 @@ Difference between the android SharedPreference and SecuritySharedPreferences li
 </map>
 ```
 
+* SecuritySharedPreferences
 ```
 <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
 <map>
@@ -44,6 +46,13 @@ allprojects {
 ```groovy
 dependencies {
     implementation 'com.github.a1573595:SecuritySharedPreferences:2.0.3'
+	
+	// Optional - Unit test
+	testImplementation 'junit:junit:4.13.2'
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+	testImplementation 'androidx.test:core-ktx:1.4.0'
+    testImplementation 'androidx.test.ext:junit-ktx:1.1.3'
+    testImplementation 'org.robolectric:robolectric:4.6.1'
 }
 ```
 
@@ -84,5 +93,26 @@ val email = preferencesManager.email
 preferencesManager.email = "ABC@gmail.com"
 ```
 
+## Unit test
+```kotlin
+@RunWith(AndroidJUnit4::class)
+class SecuritySharedPreferencesTest {
+    companion object {
+        @JvmStatic
+        @BeforeClass
+        fun beforeClass() {
+            FakeAndroidKeyStore.setup
+        }
+    }
+
+    private val preferences: CustomPreferences =
+        CustomPreferences(ApplicationProvider.getApplicationContext())
+
+	...
+}
+```
+
 ## Reference
 [AndroidKeyStore](https://github.com/joetsaitw/AndroidKeyStore)
+
+[Testing Jetpack Security with Robolectric](https://proandroiddev.com/testing-jetpack-security-with-robolectric-9f9cf2aa4f61)
