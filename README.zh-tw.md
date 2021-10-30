@@ -47,7 +47,7 @@ allprojects {
 dependencies {
     implementation 'com.github.a1573595:SecuritySharedPreferences:2.0.3'
 	
-	// Optional - Unit test
+    // Optional - Unit test
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
     testImplementation 'androidx.test:core-ktx:1.4.0'
